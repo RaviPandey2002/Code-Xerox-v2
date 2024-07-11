@@ -1,10 +1,58 @@
 import React from "react";
+import { useState } from "react";
+import { v4 as uuidV4 } from "uuid";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 const Home = () => {
+  const [roomID, setRoomID] = useState("");
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+
+  const createNewRoom = (e) => {
+    e.preventDefault();
+    const id = uuidV4();
+    setRoomID(id);
+    toast.success("Created a new room");
+  };
+
+  const joinRoom = () => {
+    if (!roomID || !username) {
+      toast.error("Room Id and Username is required");
+      return;
+    }
+    navigate(`/editor/${roomID}`, {
+      state: {
+        roomID: { roomID },
+        username: { username },
+      },
+    });
+  };
+
+  const handleInputEnter = (e) => {
+    if (e.code === "Enter") {
+      joinRoom();
+    }
+  };
+
   return (
     <>
-      <div class="register-page" id="registerPage">
-        <div class="glass-container" id="glass">
-          <div class="register-flex-1">
+      <div>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            success: {
+              theme: {
+                primary: "#4aed88",
+              },
+            },
+          }}
+        ></Toaster>
+      </div>
+      <div className="register-page" id="registerPage">
+        <div className="glass-container" id="glass">
+          <div className="register-flex-1">
             <h1>Code Xerox</h1>
           </div>
           <div>
@@ -13,105 +61,55 @@ const Home = () => {
           <div>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="handle"
               placeholder="ROOM ID"
+              value={roomID}
+              onChange={(e) => {
+                setRoomID(e.target.value);
+              }}
+              onKeyUp={handleInputEnter}
             />
           </div>
           <div>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="handle"
               placeholder="USERNAME"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+              onKeyUp={handleInputEnter}
             />
           </div>
-          <button type="button" id="register">
-            Register
+          <button onClick={joinRoom} type="button" className="btn joinBtn">
+            Join
           </button>
-          <div>
-            <h5>If you don't have an invite then create </h5>
-          </div>
+          <span className="createInfo">
+            If you don't have an invite then create{" "}
+            <a onClick={createNewRoom} href="#" className="createNewBtn">
+              Click here
+            </a>
+          </span>
         </div>
+        <footer className="footer">
+          <h4>
+            {" "}
+            Build with ❤️ &nbsp;{" "}
+            <a
+              href="https://github.com/RaviPandey2002/Code-Xerox-v2"
+              className="createNewBtn"
+            >
+              Code_Xerox
+            </a>{" "}
+          </h4>
+        </footer>
       </div>
-      <footer>
-        <h4> Build with  </h4>
-      </footer>
     </>
   );
 };
 
 export default Home;
 
-// <!-- Editor page -->
-// <div id="editor-block" style="display: none;">
-
-//   <!-- logo text -->
-//    <div class="editor-flex-1">
-//          <h1>Code Xerox</h1>
-//       </div>
-
-//       <!-- user-card -->
-//        <div class="card">
-//            <ul class="list-group list-group-flush" id="editors">
-//            </ul>
-//      </div>
-
-//      <div class="editor-chat">
-
-//     <!-- text ediotr -->
-//       <div id="editor">
-//         <textarea id="textarea" class="form-control"  rows="3"></textarea>
-
-//       </div>
-//        <div class="main__right">
-//       <div class="main__chat_window">
-//           <div class="messages">
-
-//           </div>
-//       </div>
-//       <div class="main__message_container">
-//         <input id="chat_message" type="text" autocomplete="off" placeholder="Type message here...">
-//         <div id="send" class="send__button">
-//           <i class="fab fa-telegram-plane" aria-hidden="true"></i>
-//         </div>
-//       </div>
-//   </div>
-
-//   </div>
-
-//   <div class="main">
-//   <div class="main__left">
-//     <div class="videos__group">
-//       <div id="video-grid">
-
-//       </div>
-//     </div>
-//     <div class="options">
-//       <div class="options__left">
-//         <div id="stopVideo" class="options__button">
-//           <i class="fa fa-video-camera"></i>
-//         </div>
-//         <div id="muteButton" class="options__button">
-//           <i class="fa fa-microphone"></i>
-//         </div>
-//         <div class="options__right">
-//           <div id="inviteButton" class="options__button">
-//             <i class="fas fa-copy"></i>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   </div>
-
-//  </div>
-//         <!-- <script>
-//           var Codeeditor = CodeMirror.fromTextArea(document.getElementById("textarea"), {
-//           styleActiveLine: true,
-//           lineNumbers: true,
-//           matchBrackets: true
-//       }); -->
-//         <!-- </script> -->
-//   </div>
-
-// </div>
